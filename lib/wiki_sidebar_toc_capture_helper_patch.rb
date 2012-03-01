@@ -2,7 +2,7 @@ module ActionView
   module Helpers
     module CaptureHelper
       def content_for_with_wiki_sidebar_toc(name, content = nil, &block)
-        if name == :sidebar && params[:controller] == 'wiki' && params[:action] == 'index'
+        if name == :sidebar && params[:controller] == 'wiki' && params[:action] == (WikiController.method_defined?(:show) ? 'show' : 'index')
           ivar = "@content_for_#{name}"
           instance_variable_set(ivar, "#{instance_variable_get(ivar)}#{@wiki_sidebar_toc}")
         end

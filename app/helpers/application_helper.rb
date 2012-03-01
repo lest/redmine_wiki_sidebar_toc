@@ -3,7 +3,7 @@ require_dependency 'application_helper'
 module ApplicationHelper
   def textilizable_with_wiki_sidebar_toc(*args)
     content = textilizable_without_wiki_sidebar_toc(*args)
-    if args.first.is_a?(WikiContent) && params[:controller] == 'wiki' && params[:action] == 'index'
+    if args.first.is_a?(WikiContent) && params[:controller] == 'wiki' && params[:action] == (WikiController.method_defined?(:show) ? 'show' : 'index')
       @wiki_sidebar_toc = ''
       headers = content.scan(%r{<(h([1234])).*?>(.*?)<a.*?href="(.*?)".*?>.*?</a></\1>}).to_a
       if headers.size > 1
