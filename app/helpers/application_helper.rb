@@ -5,12 +5,13 @@ module ApplicationHelper
     content = textilizable_without_wiki_sidebar_toc(*args)
     if args.first.is_a?(WikiContent) && params[:controller] == 'wiki' && params[:action] == (WikiController.method_defined?(:show) ? 'show' : 'index')
       @wiki_sidebar_toc = ''
-      headers = content.scan(%r{<(h([1234])).*?>(.*?)<a.*?href="(.*?)".*?>.*?</a></\1>}).to_a
+      headers = content.scan(%r{<(h([1234]))[^>]*?>(.*?)<a[^>]*?href="([^\"]*?)"[^>]*?>[^<]*?</a></\1>}).to_a
       if headers.size > 1
         @wiki_sidebar_toc << "<h3>#{t(:wiki_sidebar_toc_title)}</h3>"
         headers.each do |matches|
           h_level = matches[1].to_i - 1
           h_content = matches[2]
+          h_content = $1 if h_content =~ %r{<a[^>]*?>([^<]*?)</a>}
           h_href = matches[3]
           @wiki_sidebar_toc << "<a href=\"#{h(h_href)}\" style=\"display: block; margin-left: #{h_level * 10}px\">#{h_content}</a>"
         end
